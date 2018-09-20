@@ -19,6 +19,13 @@ import {
 } from './mutations'
 import { encodeRsqlValue } from '@molgenis/rsql'
 
+const currentScript = document.currentScript || (function () {
+  var scripts = document.getElementsByTagName('script')
+  return scripts[scripts.length - 1]
+})()
+
+const server = currentScript.getAttribute('api-server') ? currentScript.getAttribute('api-server') : ''
+
 /* ACTION CONSTANTS */
 export const GET_COUNTRY_OPTIONS = '__GET_COUNTRY_OPTIONS__'
 export const GET_MATERIALS_OPTIONS = '__GET_MATERIALS_OPTIONS__'
@@ -36,17 +43,17 @@ export const GET_BIOBANK_REPORT = '__GET_BIOBANK_REPORT__'
 export const SEND_TO_NEGOTIATOR = '__SEND_TO_NEGOTIATOR__'
 
 /* API PATHS */
-const BIOBANK_API_PATH = '/api/v2/eu_bbmri_eric_biobanks'
-const COLLECTION_API_PATH = '/api/v2/eu_bbmri_eric_collections'
-const COLLECTION_QUALITY_API_PATH = '/api/v2/eu_bbmri_eric_assess_level_col'
-const BIOBANK_QUALITY_API_PATH = '/api/v2/eu_bbmri_eric_assess_level_bio'
-const COUNTRY_API_PATH = '/api/v2/eu_bbmri_eric_countries'
-const MATERIALS_API_PATH = '/api/v2/eu_bbmri_eric_material_types'
-const COLLECTION_TYPES_API_PATH = '/api/v2/eu_bbmri_eric_collection_types'
-const DATA_TYPES_API_PATH = '/api/v2/eu_bbmri_eric_data_types'
-const DISEASE_API_PATH = '/api/v2/eu_bbmri_eric_disease_types'
-const COLLECTION_QUALITY_INFO_API_PATH = '/api/v2/eu_bbmri_eric_col_qual_info'
-const BIOBANK_QUALITY_INFO_API_PATH = '/api/v2/eu_bbmri_eric_bio_qual_info'
+const BIOBANK_API_PATH = server + '/api/v2/eu_bbmri_eric_biobanks'
+const COLLECTION_API_PATH = server + '/api/v2/eu_bbmri_eric_collections'
+const COLLECTION_QUALITY_API_PATH = server + '/api/v2/eu_bbmri_eric_assess_level_col'
+const BIOBANK_QUALITY_API_PATH = server + '/api/v2/eu_bbmri_eric_assess_level_bio'
+const COUNTRY_API_PATH = server + '/api/v2/eu_bbmri_eric_countries'
+const MATERIALS_API_PATH = server + '/api/v2/eu_bbmri_eric_material_types'
+const COLLECTION_TYPES_API_PATH = server + '/api/v2/eu_bbmri_eric_collection_types'
+const DATA_TYPES_API_PATH = server + '/api/v2/eu_bbmri_eric_data_types'
+const DISEASE_API_PATH = server + '/api/v2/eu_bbmri_eric_disease_types'
+const COLLECTION_QUALITY_INFO_API_PATH = server + '/api/v2/eu_bbmri_eric_col_qual_info'
+const BIOBANK_QUALITY_INFO_API_PATH = server + '/api/v2/eu_bbmri_eric_bio_qual_info'
 
 const COLLECTION_ATTRIBUTE_SELECTOR = 'collections(id,materials,diagnosis_available,name,type,order_of_magnitude(*),size,sub_collections(*),parent_collection,quality(*))'
 
@@ -201,7 +208,7 @@ export default {
     const options = {
       body: JSON.stringify(helpers.createNegotiatorQueryBody(state, getters, helpers.getLocationHref()))
     }
-    api.post('/plugin/directory/export', options)
+    api.post(server + '/plugin/directory/export', options)
       .then(helpers.setLocationHref, error => commit(SET_ERROR, error))
   }
 }

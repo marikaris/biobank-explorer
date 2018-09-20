@@ -4,6 +4,8 @@ import Vue from 'vue'
 import store from './store'
 import router from './router'
 import i18n from '@molgenis/molgenis-i18n-js/dist/molgenis-i18n.esm'
+import vueCustomElement from 'vue-custom-element'
+import 'document-register-element/build/document-register-element'
 
 import { sync } from 'vuex-router-sync'
 import { INITIAL_STATE } from './store/state'
@@ -41,14 +43,10 @@ Vue.use(i18n, {
   fallbackLng: INITIAL_STATE.fallbackLng,
   namespace: 'biobank-explorer',
   callback () {
-    /* eslint-disable no-new */
-    new Vue({
-      el: '#app',
-      store,
-      router,
-      template: '<App />',
-      components: {App}
-    })
+    Vue.use(vueCustomElement)
+    App.store = store
+    App.router = router
+    Vue.customElement('biobank-explorer-widget', App)
   }
 })
 
